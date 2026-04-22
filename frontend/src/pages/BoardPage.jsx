@@ -66,7 +66,7 @@ export default function BoardPage() {
             <Column key={col.id} column={col} boardId={id} onRefresh={() => fetchBoard(id)} />
             ))}
 
-            {/* Formulario para nueva columna */}
+            {/* Forms column */}
             <div style={styles.newColBox}>
             <form onSubmit={handleAddColumn} style={styles.newColForm}>
                 <input

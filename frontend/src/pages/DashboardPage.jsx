@@ -92,7 +92,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Tableros */}
+        {/* Boards */}
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Tableros</h2>
           <form onSubmit={handleCreateBoard} style={styles.inlineForm}>

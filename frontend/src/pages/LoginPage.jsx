@@ -16,7 +16,7 @@ export default function LoginPage() {
       await login(form);
       navigate('/');
     } catch {
-      // el error ya queda en el store
+        
     }
   };
 

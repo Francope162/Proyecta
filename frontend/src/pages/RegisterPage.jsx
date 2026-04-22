@@ -18,7 +18,7 @@ export default function RegisterPage() {
       await register(form);
       navigate('/login');
     } catch {
-      // el error ya queda en el store
+        
     }
   };
 
