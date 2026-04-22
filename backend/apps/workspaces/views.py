@@ -23,13 +23,21 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Returns workspaces where the user is a member
         return Workspace.objects.filter(members__user=self.request.user)
+    
+    @action(detail=True, methods=['get'], url_path='members')
+    def list_members(self, request, pk=None):
+        workspace = self.get_object()
+        members = workspace.members.select_related('user').all()
+        
+        serializer = WorkspaceMemberSerializer(members, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='invite')
     def invite(self, request, pk=None):
         workspace = self.get_object()
         if workspace.owner != request.user:
             return Response(
-                {'detail': 'Solo el owner puede invitar miembros.'},
+                {'detail': 'Only the owner can invite.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         email = request.data.get('email')
@@ -39,7 +47,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 
         if WorkspaceMember.objects.filter(workspace=workspace, user=user).exists():
             return Response(
-                {'detail': 'El usuario ya es miembro.'},
+                {'detail': 'The user is already a member.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         member = WorkspaceMember.objects.create(
@@ -52,7 +60,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         workspace = self.get_object()
         if workspace.owner != request.user:
             return Response(
-                {'detail': 'Solo el owner puede eliminar miembros.'},
+                {'detail': 'Only the owner can delete members.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         member = get_object_or_404(WorkspaceMember, workspace=workspace, user_id=user_id)

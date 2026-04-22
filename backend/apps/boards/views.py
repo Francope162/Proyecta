@@ -9,7 +9,7 @@ from apps.workspaces.models import WorkspaceMember
 
 class IsBoardWorkspaceMember(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        # Funciona tanto para Board como para Column y Task
+        #Works for column, board and tasks
         if hasattr(obj, 'workspace'):
             workspace = obj.workspace
         elif hasattr(obj, 'board'):
@@ -30,7 +30,12 @@ class BoardViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Board.objects.filter(
             workspace__members__user=self.request.user
-        ).prefetch_related('columns__tasks')
+        ).select_related(
+            'workspace', 'created_by'
+        ).prefetch_related(
+            'columns__tasks__assignees',
+            'columns__tasks__created_by'
+        )
 
 
 class ColumnViewSet(viewsets.ModelViewSet):
@@ -40,7 +45,11 @@ class ColumnViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Column.objects.filter(
             board__workspace__members__user=self.request.user
-        ).prefetch_related('tasks')
+        ).select_related(
+            'board__workspace' # JOIN board and workspace
+        ).prefetch_related(
+            'tasks__assignees'
+        )
 
     @action(detail=True, methods=['patch'], url_path='reorder')
     def reorder(self, request, pk=None):
@@ -48,7 +57,7 @@ class ColumnViewSet(viewsets.ModelViewSet):
         order  = request.data.get('order')
         if order is None:
             return Response(
-                {'detail': 'El campo order es requerido.'},
+                {'detail': 'The field is required.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         column.order = order
@@ -63,7 +72,11 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Task.objects.filter(
             column__board__workspace__members__user=self.request.user
-        ).prefetch_related('taskassignee_set__user')
+        ).select_related(
+            'column__board'
+        ).prefetch_related(
+            'taskassignee_set__user'
+        )
 
     @action(detail=True, methods=['patch'], url_path='move')
     def move(self, request, pk=None):
