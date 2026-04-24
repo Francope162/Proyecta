@@ -22,12 +22,11 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'owner', 'created_at']
 
     def create(self, validated_data):
-        # El owner se asigna automáticamente desde la view
         workspace = Workspace.objects.create(
             owner=self.context['request'].user,
             **validated_data
         )
-        # El owner también queda como miembro con rol owner
+        
         WorkspaceMember.objects.create(
             workspace=workspace,
             user=self.context['request'].user,

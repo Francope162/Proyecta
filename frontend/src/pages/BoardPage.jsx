@@ -63,7 +63,7 @@ export default function BoardPage() {
         <DragDropContext onDragEnd={handleDragEnd}>
         <div style={styles.columnsRow}>
             {board.columns.map((col) => (
-            <Column key={col.id} column={col} boardId={id} onRefresh={() => fetchBoard(id)} />
+            <Column key={col.id} column={col} boardId={id} members={board.workspace_members || []} onRefresh={() => fetchBoard(id)} />
             ))}
 
             {/* Forms column */}

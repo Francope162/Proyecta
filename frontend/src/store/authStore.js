@@ -11,7 +11,7 @@ const useAuthStore = create((set) => ({
     try {
       await registerApi(data);
     } catch (e) {
-      set({ error: e.response?.data || 'Error al registrarse' });
+      set({ error: e.response?.data || 'Server error' });
       throw e;
     } finally {
       set({ loading: false });
@@ -27,7 +27,7 @@ const useAuthStore = create((set) => ({
       const me = await getMe();
       set({ user: me.data });
     } catch (e) {
-      set({ error: e.response?.data || 'Credenciales incorrectas' });
+      set({ error: e.response?.data || 'Invalid credentials' });
       throw e;
     } finally {
       set({ loading: false });

@@ -3,7 +3,7 @@ import { Droppable } from '@hello-pangea/dnd';
 import { createTask } from '../../api/boards';
 import TaskCard from './TaskCard';
 
-export default function Column({ column, boardId, onRefresh }) {
+export default function Column({ column, boardId, members = [], onRefresh }) {
   const [form, setForm]       = useState({ title: '', priority: 'medium' });
   const [adding, setAdding]   = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -51,6 +51,7 @@ export default function Column({ column, boardId, onRefresh }) {
                 key={task.id}
                 task={task}
                 index={index}
+                members={members}
                 onRefresh={onRefresh}
               />
             ))}

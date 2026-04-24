@@ -11,3 +11,4 @@ export const createTask  = (data)       => api.post('/tasks/', data);
 export const updateTask  = (id, data)   => api.patch(`/tasks/${id}/`, data);
 export const moveTask    = (id, data)   => api.patch(`/tasks/${id}/move/`, data);
 export const deleteTask  = (id)         => api.delete(`/tasks/${id}/`);
+export const taskAsign = (id,data) => api.patch(`/tasks/${id}/`, data);

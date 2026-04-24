@@ -57,13 +57,6 @@ export default function DashboardPage() {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
-        <h1 style={styles.logo}>Project Manager</h1>
-        <div style={styles.userRow}>
-          <span style={styles.username}>{user?.username}</span>
-          <button style={styles.logoutBtn} onClick={handleLogout}>Salir</button>
-        </div>
-      </header>
 
       <main style={styles.main}>
 

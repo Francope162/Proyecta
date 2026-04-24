@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all(),message="A account with a that mail already exists.")])
     password  = serializers.CharField(write_only=True, min_length=8)
     password2 = serializers.CharField(write_only=True)
 

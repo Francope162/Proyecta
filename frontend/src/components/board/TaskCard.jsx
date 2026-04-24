@@ -8,20 +8,40 @@ const priorityColors = {
   high:   { bg: '#fef2f2', text: '#991b1b', label: 'Alta' },
 };
 
-export default function TaskCard({ task, index, onRefresh }) {
-  const [editing, setEditing]   = useState(false);
-  const [form, setForm]         = useState({ title: task.title, description: task.description || '', priority: task.priority });
-  const [loading, setLoading]   = useState(false);
+export default function TaskCard({ task, index, members = [], onRefresh }) {
+  const [editing, setEditing] = useState(false);
+  const [form, setForm]       = useState({
+    title:        task.title,
+    description:  task.description || '',
+    priority:     task.priority,
+    assignee_ids: task.assignees?.map(a => String(a.user.id)) || [], // ← era undefined antes
+  });
+  const [loading, setLoading] = useState(false);
 
   const priority = priorityColors[task.priority] || priorityColors.medium;
+
+  // ← corregido: Array.from para que siempre sea array
+  const handleAssigneeChange = (e) => {
+    const selected = Array.from(e.target.selectedOptions).map(o => o.value);
+    setForm({ ...form, assignee_ids: selected });
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await updateTask(task.id, form);
+      await updateTask(task.id, {
+        title:        form.title,
+        description:  form.description,
+        priority:     form.priority,
+        assignee_ids: Array.isArray(form.assignee_ids)  // ← forzar array siempre
+                        ? form.assignee_ids
+                        : [form.assignee_ids].filter(Boolean),
+      });
       setEditing(false);
       onRefresh();
+    } catch (err) {
+      console.error('Error:', err.response?.data);
     } finally {
       setLoading(false);
     }
@@ -70,6 +90,23 @@ export default function TaskCard({ task, index, onRefresh }) {
                 <option value="medium">Media</option>
                 <option value="high">Alta</option>
               </select>
+
+              <label style={styles.assignLabel}>
+                Asignados (Ctrl + clic para varios)
+              </label>
+              <select
+                multiple
+                style={{ ...styles.editInput, height: '90px' }}
+                value={form.assignee_ids}
+                onChange={handleAssigneeChange}  // ← usamos el handler corregido
+              >
+                {members.map(m => (
+                  <option key={m.id} value={m.id}>
+                    {m.username}
+                  </option>
+                ))}
+              </select>
+
               <div style={styles.editButtons}>
                 <button style={styles.saveBtn} type="submit" disabled={loading}>
                   {loading ? '...' : 'Guardar'}
@@ -103,6 +140,16 @@ export default function TaskCard({ task, index, onRefresh }) {
                   </span>
                 )}
               </div>
+
+              {task.assignees?.length > 0 && (
+                <div style={styles.assignees}>
+                  {task.assignees.map(a => (
+                    <div key={a.user.id} style={styles.assigneeChip}>
+                      {a.user.username.slice(0, 2).toUpperCase()}
+                    </div>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -126,4 +173,7 @@ const styles = {
   editButtons:   { display: 'flex', gap: '8px' },
   saveBtn:       { flex: 1, padding: '7px', borderRadius: '8px', background: '#1a1a1a', color: '#fff', fontSize: '13px', cursor: 'pointer', border: 'none' },
   cancelBtn:     { flex: 1, padding: '7px', borderRadius: '8px', background: '#fff', color: '#666', fontSize: '13px', cursor: 'pointer', border: '1px solid #ddd' },
+  assignLabel:   { fontSize: '11px', color: '#888', marginTop: '4px' },
+  assignees:     { display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' },
+  assigneeChip:  { width: '24px', height: '24px', borderRadius: '50%', background: 'linear-gradient(135deg, #4fffb0, #00c8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', color: '#080c10' },
 };

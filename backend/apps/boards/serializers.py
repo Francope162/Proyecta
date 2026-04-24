@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Board, Column, Task, TaskAssignee
 from apps.users.serializers import UserSerializer
+from apps.workspaces.models import WorkspaceMember
 
 class TaskAssigneeSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -61,11 +62,25 @@ class ColumnSerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
     columns    = ColumnSerializer(many=True, read_only=True)
     created_by = UserSerializer(read_only=True)
+    workspace_members = serializers.SerializerMethodField()
 
     class Meta:
         model = Board
-        fields = ['id', 'workspace', 'name', 'description', 'columns', 'created_by', 'created_at']
+        fields = ['id', 'workspace', 'name', 'description', 'columns', 'created_by', 'created_at', 'workspace_members']
         read_only_fields = ['id', 'created_by', 'created_at']
+
+    def get_workspace_members(self, obj):
+        members = WorkspaceMember.objects.filter(
+            workspace=obj.workspace
+        ).select_related('user')
+        return [
+            {
+                'id':       str(m.user.id),
+                'username': m.user.username,
+                'initials': m.user.username[:2].upper(),
+            }
+            for m in members
+        ]
 
     def create(self, validated_data):
         return Board.objects.create(
