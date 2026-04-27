@@ -13,7 +13,7 @@ export default function BoardPage() {
     const [adding, setAdding]         = useState(false);
 
     useEffect(() => {
-    fetchBoard(id);
+        fetchBoard(id);
     }, [id]);
 
     const handleDragEnd = async (result) => {
@@ -87,14 +87,14 @@ export default function BoardPage() {
 }
 
 const styles = {
-  page:       { minHeight: '100vh', background: '#f0f2f5' },
-  header:     { display: 'flex', alignItems: 'center', gap: '16px', padding: '1rem 1.5rem', background: '#fff', borderBottom: '1px solid #e0e0e0' },
+  page:       { minHeight: '100vh', background: 'rgba(8, 12, 16, 0.85)' },
+  header:     { display: 'flex', alignItems: 'center', gap: '16px', padding: '1rem 1.5rem', background: 'rgba(8, 12, 16, 0.85)', borderBottom: '1px solid #e0e0e0' },
   back:       { fontSize: '13px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' },
   title:      { fontSize: '18px', fontWeight: '500', margin: 0 },
   columnsRow: { display: 'flex', gap: '14px', padding: '1.5rem', overflowX: 'auto', alignItems: 'flex-start', minHeight: 'calc(100vh - 65px)' },
-  newColBox:  { minWidth: '260px', background: '#fff', borderRadius: '12px', border: '1px solid #e0e0e0', padding: '1rem' },
+  newColBox:  { minWidth: '260px', background: '#0d1117', borderRadius: '12px', border: '1px solid #1e2730', padding: '1rem' },
   newColForm: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  newColInput:{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' },
-  newColBtn:  { padding: '8px', borderRadius: '8px', background: '#1a1a1a', color: '#fff', fontSize: '13px', cursor: 'pointer', border: 'none' },
+  newColInput:{ padding: '8px 10px', borderRadius: '4px', border: '1px solid #1e2730', fontSize: '1rem', background: '#080c10', color: '#e8edf2', fontFamily: "'DM Mono', monospace", outline: 'none' },
+  newColBtn:  { flex: 1, padding: '7px', borderRadius: '3px', background: '#4fffb0', color: '#080c10', fontSize: '0.75rem', cursor: 'pointer', border: 'none', fontFamily: "'Syne', sans-serif", fontWeight: '700', letterSpacing: '0.04em' },
   loading:    { padding: '2rem', textAlign: 'center', color: '#999' },
 };

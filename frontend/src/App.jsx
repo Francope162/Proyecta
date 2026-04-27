@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import BoardPage from './pages/BoardPage';
 import Navbar from './components/ui/Navbar';
 import LandingPage from './pages/LandingPage';
+import WorkspacePage from './pages/WorkspacePage';
 
 export default function App() {
   const fetchMe = useAuthStore((s) => s.fetchMe);
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/"          element={<LandingPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/workspace/:id"       element={<WorkspacePage />} />
           <Route path="/board/:id" element={<BoardPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />

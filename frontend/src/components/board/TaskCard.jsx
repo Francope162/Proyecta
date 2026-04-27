@@ -17,6 +17,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
     assignee_ids: task.assignees?.map(a => String(a.user.id)) || [], // ← era undefined antes
   });
   const [loading, setLoading] = useState(false);
+  const [hoverTask,setHoverTask] = useState(false);
 
   const priority = priorityColors[task.priority] || priorityColors.medium;
 
@@ -34,6 +35,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
         title:        form.title,
         description:  form.description,
         priority:     form.priority,
+        due_date: form.due_date,
         assignee_ids: Array.isArray(form.assignee_ids)  // ← forzar array siempre
                         ? form.assignee_ids
                         : [form.assignee_ids].filter(Boolean),
@@ -63,8 +65,10 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
           style={{
             ...styles.card,
             boxShadow: snapshot.isDragging ? '0 4px 12px rgba(0,0,0,0.12)' : 'none',
-            ...provided.draggableProps.style,
+            ...provided.draggableProps.style, borderColor: hoverTask ? '#4fffb0' : '#1e2730', color:       hoverTask ? '#4fffb0' : '#5a6a7a',
           }}
+          onMouseEnter={()=> setHoverTask(true)}
+          onMouseLeave={()=> setHoverTask(false)}
         >
           {editing ? (
             <form onSubmit={handleSave} style={styles.editForm}>
@@ -106,7 +110,12 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                   </option>
                 ))}
               </select>
-
+              <input
+                style={styles.taskInput}
+                type="date"
+                value={form.due_date}
+                onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+              />
               <div style={styles.editButtons}>
                 <button style={styles.saveBtn} type="submit" disabled={loading}>
                   {loading ? '...' : 'Guardar'}
@@ -159,7 +168,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
 }
 
 const styles = {
-  card:          { background: '#fff', border: '1px solid #e0e0e0', borderRadius: '10px', padding: '10px 12px', cursor: 'grab', transition: 'box-shadow 0.15s' },
+  card:          { background: '#0d1117', border: '1px solid #1e2730', borderRadius: '10px', padding: '10px 12px', cursor: 'grab', transition: 'box-shadow 0.15s' },
   cardHeader:    { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' },
   cardTitle:     { fontSize: '13px', fontWeight: '500', margin: 0, lineHeight: '1.5', flex: 1 },
   cardDesc:      { fontSize: '12px', color: '#888', margin: '6px 0 0', lineHeight: '1.5' },

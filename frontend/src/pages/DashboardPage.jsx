@@ -2,147 +2,149 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import { getWorkspaces, createWorkspace } from '../api/workspaces';
-import { getBoards, createBoard } from '../api/boards';
+import InvitationsInbox from '../components/ui/InvitationsInbox';
 
 export default function DashboardPage() {
-  const { user, logout }              = useAuthStore();
-  const navigate                      = useNavigate();
-  const [workspaces, setWorkspaces]   = useState([]);
-  const [boards, setBoards]           = useState([]);
-  const [wsForm, setWsForm]           = useState({ name: '', slug: '' });
-  const [boardForm, setBoardForm]     = useState({ name: '', workspace: '' });
-  const [loading, setLoading]         = useState(false);
+  const { user, logout }            = useAuthStore();
+  const navigate                    = useNavigate();
+  const [workspaces, setWorkspaces] = useState([]);
+  const [form, setForm]             = useState({ name: '', slug: '' });
+  const [loading, setLoading]       = useState(false);
+  const [creating, setCreating]     = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
-    const [ws, bs] = await Promise.all([getWorkspaces(), getBoards()]);
-    setWorkspaces(ws.data);
-    setBoards(bs.data);
-    if (ws.data.length > 0) {
-      setBoardForm((f) => ({ ...f, workspace: ws.data[0].id }));
-    }
-  };
-
-  const handleCreateWorkspace = async (e) => {
-    e.preventDefault();
     setLoading(true);
     try {
-      await createWorkspace(wsForm);
-      setWsForm({ name: '', slug: '' });
-      loadData();
+      const { data } = await getWorkspaces();
+      setWorkspaces(data);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreateBoard = async (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setCreating(true);
     try {
-      await createBoard(boardForm);
-      setBoardForm((f) => ({ ...f, name: '' }));
+      await createWorkspace(form);
+      setForm({ name: '', slug: '' });
       loadData();
     } finally {
-      setLoading(false);
+      setCreating(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   return (
-    <div style={styles.page}>
+    <div style={s.page}>
+      {/* fondo partículas */}
+      <div style={s.grid} />
 
-      <main style={styles.main}>
+      <div style={s.container}>
+        {/* Header */}
+        <InvitationsInbox onActionSuccess={loadData}/>
+        <div style={s.header}>
+          <div>
+            <div style={s.tag}>// Tus espacios</div>
+            <h1 style={s.title}>Workspaces</h1>
+          </div>
+          <button style={s.btnGhost} onClick={() => setCreating(c => !c)}>
+            {creating ? '✕ Cancelar' : '+ Nuevo workspace'}
+          </button>
+        </div>
 
-        {/* Workspaces */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Workspaces</h2>
-          <form onSubmit={handleCreateWorkspace} style={styles.inlineForm}>
+        {/* Form crear */}
+        {creating && (
+          <form onSubmit={handleCreate} style={s.createForm}>
             <input
-              style={styles.input}
-              placeholder="Nombre"
-              value={wsForm.name}
-              onChange={(e) => setWsForm({ ...wsForm, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+              style={s.input}
+              placeholder="Nombre del workspace"
+              value={form.name}
+              onChange={(e) => setForm({
+                name: e.target.value,
+                slug: e.target.value.toLowerCase().replace(/\s+/g, '-')
+              })}
               required
+              autoFocus
             />
-            <button style={styles.addBtn} type="submit" disabled={loading}>
-              + Crear
+            <button style={s.btnPrimary} type="submit" disabled={creating}>
+              Crear
             </button>
           </form>
-          <div style={styles.grid}>
+        )}
+
+        {/* Grid de workspaces */}
+        {loading ? (
+          <p style={s.empty}>Cargando...</p>
+        ) : workspaces.length === 0 ? (
+          <div style={s.emptyState}>
+            <p style={s.emptyIcon}>⊞</p>
+            <p style={s.emptyTitle}>No tenés workspaces todavía</p>
+            <p style={s.emptyDesc}>Creá uno para empezar a organizar tus proyectos.</p>
+          </div>
+        ) : (
+          <div style={s.grid2}>
             {workspaces.map((ws) => (
-              <div key={ws.id} style={styles.card}>
-                <p style={styles.cardTitle}>{ws.name}</p>
-                <p style={styles.cardSub}>{ws.members?.length} miembro(s)</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Boards */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Tableros</h2>
-          <form onSubmit={handleCreateBoard} style={styles.inlineForm}>
-            <input
-              style={styles.input}
-              placeholder="Nombre del tablero"
-              value={boardForm.name}
-              onChange={(e) => setBoardForm({ ...boardForm, name: e.target.value })}
-              required
-            />
-            <select
-              style={styles.input}
-              value={boardForm.workspace}
-              onChange={(e) => setBoardForm({ ...boardForm, workspace: e.target.value })}
-            >
-              {workspaces.map((ws) => (
-                <option key={ws.id} value={ws.id}>{ws.name}</option>
-              ))}
-            </select>
-            <button style={styles.addBtn} type="submit" disabled={loading}>
-              + Crear
-            </button>
-          </form>
-          <div style={styles.grid}>
-            {boards.map((board) => (
               <div
-                key={board.id}
-                style={{ ...styles.card, cursor: 'pointer' }}
-                onClick={() => navigate(`/board/${board.id}`)}
+                key={ws.id}
+                style={s.card}
+                onClick={() => navigate(`/workspace/${ws.id}`)}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = '#4fffb0';
+                  e.currentTarget.style.background  = '#151d26';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = '#1e2730';
+                  e.currentTarget.style.background  = '#0d1117';
+                }}
               >
-                <p style={styles.cardTitle}>{board.name}</p>
-                <p style={styles.cardSub}>{board.columns?.length} columna(s)</p>
+                <div style={s.cardTop}>
+                  <div style={s.cardIcon}>
+                    {ws.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div style={s.cardArrow}>→</div>
+                </div>
+                <div style={s.cardName}>{ws.name}</div>
+                <div style={s.cardMeta}>
+                  <span style={s.cardTag}>
+                    {ws.members?.length || 1} miembro{ws.members?.length !== 1 ? 's' : ''}
+                  </span>
+                  <span style={s.cardTag}>
+                    {ws.boards?.length || 0} tablero{ws.boards?.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
-        </section>
-
-      </main>
+        )}
+      </div>
     </div>
   );
 }
 
-const styles = {
-  page:         { minHeight: '100vh', background: '#f5f5f5' },
-  header:       { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', background: '#fff', borderBottom: '1px solid #e0e0e0' },
-  logo:         { fontSize: '18px', fontWeight: '500', margin: 0 },
-  userRow:      { display: 'flex', alignItems: 'center', gap: '12px' },
-  username:     { fontSize: '14px', color: '#666' },
-  logoutBtn:    { fontSize: '13px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' },
-  main:         { maxWidth: '900px', margin: '0 auto', padding: '2rem' },
-  section:      { marginBottom: '2.5rem' },
-  sectionTitle: { fontSize: '16px', fontWeight: '500', marginBottom: '1rem' },
-  inlineForm:   { display: 'flex', gap: '10px', marginBottom: '1rem', flexWrap: 'wrap' },
-  input:        { padding: '8px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', flex: 1, minWidth: '160px' },
-  addBtn:       { padding: '8px 16px', borderRadius: '8px', background: '#1a1a1a', color: '#fff', fontSize: '14px', cursor: 'pointer', border: 'none', whiteSpace: 'nowrap' },
-  grid:         { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' },
-  card:         { background: '#fff', border: '1px solid #e0e0e0', borderRadius: '10px', padding: '1rem 1.25rem' },
-  cardTitle:    { fontSize: '14px', fontWeight: '500', margin: '0 0 4px' },
-  cardSub:      { fontSize: '12px', color: '#999', margin: 0 },
+const s = {
+  page:       { minHeight: '100vh', background: '#080c10', paddingTop: '62px', fontFamily: "'DM Mono', monospace" },
+  grid:       { position: 'fixed', inset: 0, backgroundImage: 'radial-gradient(#1e2730 1px, transparent 1px)', backgroundSize: '32px 32px', opacity: 0.4, pointerEvents: 'none' },
+  container:  { maxWidth: '960px', margin: '0 auto', padding: '3rem 2rem' },
+  header:     { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' },
+  tag:        { fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#4fffb0', marginBottom: '0.4rem' },
+  title:      { fontFamily: "'Syne', sans-serif", fontSize: '2.5rem', fontWeight: 800, color: '#e8edf2', letterSpacing: '-0.03em', margin: 0 },
+  btnGhost:   { background: 'transparent', border: '1px solid rgba(79,255,176,0.3)', color: '#4fffb0', padding: '0.5rem 1.2rem', borderRadius: '3px', fontSize: '0.78rem', cursor: 'pointer', letterSpacing: '0.04em', transition: 'all 0.2s' },
+  btnPrimary: { background: '#4fffb0', color: '#080c10', border: 'none', padding: '0.55rem 1.4rem', borderRadius: '3px', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', whiteSpace: 'nowrap' },
+  createForm: { display: 'flex', gap: '10px', marginBottom: '2rem', background: '#0d1117', border: '1px solid #1e2730', borderRadius: '6px', padding: '1rem' },
+  input:      { flex: 1, background: '#080c10', border: '1px solid #1e2730', borderRadius: '4px', color: '#e8edf2', padding: '0.55rem 0.9rem', fontSize: '0.82rem', fontFamily: "'DM Mono', monospace", outline: 'none' },
+  grid2:      { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1px', background: '#1e2730' },
+  card:       { background: '#0d1117', padding: '1.5rem', cursor: 'pointer', transition: 'all 0.2s', border: '1px solid #1e2730' },
+  cardTop:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' },
+  cardIcon:   { width: '40px', height: '40px', borderRadius: '8px', background: 'linear-gradient(135deg, rgba(79,255,176,0.15), rgba(0,200,255,0.15))', border: '1px solid rgba(79,255,176,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '0.85rem', color: '#4fffb0' },
+  cardArrow:  { color: '#1e2730', fontSize: '1rem', transition: 'color 0.2s' },
+  cardName:   { fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#e8edf2', marginBottom: '0.8rem' },
+  cardMeta:   { display: 'flex', gap: '0.5rem', flexWrap: 'wrap' },
+  cardTag:    { fontSize: '0.68rem', letterSpacing: '0.08em', textTransform: 'uppercase', background: 'rgba(255,255,255,0.04)', border: '1px solid #1e2730', color: '#5a6a7a', padding: '0.2rem 0.6rem', borderRadius: '2px' },
+  emptyState: { textAlign: 'center', padding: '5rem 2rem' },
+  emptyIcon:  { fontSize: '3rem', marginBottom: '1rem', color: '#1e2730' },
+  emptyTitle: { fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.1rem', color: '#e8edf2', marginBottom: '0.5rem' },
+  emptyDesc:  { fontSize: '0.8rem', color: '#5a6a7a' },
+  empty:      { color: '#5a6a7a', fontSize: '0.82rem', textAlign: 'center', padding: '3rem' },
 };
