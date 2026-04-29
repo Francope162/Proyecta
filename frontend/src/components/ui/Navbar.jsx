@@ -35,12 +35,9 @@ export default function Navbar() {
               <span className="navbar__chevron">▾</span>
 
               <div className="navbar__dropdown">
-                <Link to="/profile" className="dropdown__item">
-                  <span className="dropdown__icon">◎</span> Mi perfil
-                </Link>
-                <Link to="/settings" className="dropdown__item">
-                  <span className="dropdown__icon">⚙</span> Configuración
-                </Link>
+              <Link to={`/profile/${user.username}`} className="dropdown__item">
+                <span className="dropdown__icon">◎</span> Mi perfil
+              </Link>
                 <div className="dropdown__divider" />
                 <button className="dropdown__item danger" onClick={handleLogout}>
                   <span className="dropdown__icon">→</span> Cerrar sesión

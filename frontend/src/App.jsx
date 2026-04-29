@@ -9,6 +9,7 @@ import BoardPage from './pages/BoardPage';
 import Navbar from './components/ui/Navbar';
 import LandingPage from './pages/LandingPage';
 import WorkspacePage from './pages/WorkspacePage';
+import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
   const fetchMe = useAuthStore((s) => s.fetchMe);
@@ -23,13 +24,14 @@ export default function App() {
     <BrowserRouter>
       <Navbar />        {/* ← afuera de Routes */}
       <Routes>
+        <Route path="/"          element={<LandingPage />} />
         <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/"          element={<LandingPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/workspace/:id"       element={<WorkspacePage />} />
           <Route path="/board/:id" element={<BoardPage />} />
+          <Route path="/profile/:username"   element={<ProfilePage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

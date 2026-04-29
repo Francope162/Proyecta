@@ -55,7 +55,7 @@ export default function WorkspacePage() {
 
         {/* Breadcrumb */}
         <div style={s.breadcrumb}>
-          <span style={s.breadcrumbLink} onClick={() => navigate('/')}>Workspaces</span>
+          <span style={s.breadcrumbLink} onClick={() => navigate('/dashboard')}>Workspaces</span>
           <span style={s.breadcrumbSep}>/</span>
           <span style={s.breadcrumbCurrent}>{workspace.name}</span>
         </div>
