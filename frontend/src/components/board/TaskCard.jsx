@@ -14,10 +14,17 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
     title:        task.title,
     description:  task.description || '',
     priority:     task.priority,
+    status: task.status,
     assignee_ids: task.assignees?.map(a => String(a.user.id)) || [], // ← era undefined antes
   });
   const [loading, setLoading] = useState(false);
   const [hoverTask,setHoverTask] = useState(false);
+
+  const statusConfig = {
+  'Complete': { icon: '✓', color: '#4fffb0', label: 'Completada' },
+  'In progress': { icon: '•', color: '#00c8ff', label: 'En proceso' }, // Un círculo brillante
+  'Incomplete': { icon: '✕', color: '#c0392b', label: 'Incompleta' },
+  };
 
   const priority = priorityColors[task.priority] || priorityColors.medium;
 
@@ -34,6 +41,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
       await updateTask(task.id, {
         title:        form.title,
         description:  form.description,
+        status: form.status,
         priority:     form.priority,
         due_date: form.due_date,
         assignee_ids: Array.isArray(form.assignee_ids)  // ← forzar array siempre
@@ -95,6 +103,16 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                 <option value="high">Alta</option>
               </select>
 
+              <select
+                style={styles.editInput}
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="Incomplete">Incompleta</option>
+                <option value="In progress">En proceso</option>
+                <option value="Complete">Completada</option>
+              </select>
+
               <label style={styles.assignLabel}>
                 Asignados (Ctrl + clic para varios)
               </label>
@@ -139,6 +157,20 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                 <p style={styles.cardDesc}>{task.description}</p>
               )}
 
+              {/* LÓGICA DEL ICONO DE ESTADO */}
+              {task.status && statusConfig[task.status] && (
+                <div 
+                  title={statusConfig[task.status].label}
+                  style={{ 
+                    ...styles.statusIconContainer, 
+                    color: statusConfig[task.status].color,
+                    borderColor: statusConfig[task.status].color
+                  }}
+                >
+                  {statusConfig[task.status].icon}
+                </div>
+              )}
+
               <div style={styles.cardFooter}>
                 <span style={{ ...styles.priorityBadge, background: priority.bg, color: priority.text }}>
                   {priority.label}
@@ -168,7 +200,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
 }
 
 const styles = {
-  card:          { background: '#0d1117', border: '1px solid #1e2730', borderRadius: '10px', padding: '10px 12px', cursor: 'grab', transition: 'box-shadow 0.15s' },
+  card:          { background: '#0d1117', border: '1px solid #1e2730', borderRadius: '10px', padding: '10px 12px', cursor: 'grab', transition: 'box-shadow 0.15s', position: 'relative' },
   cardHeader:    { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' },
   cardTitle:     { fontSize: '13px', fontWeight: '500', margin: 0, lineHeight: '1.5', flex: 1 },
   cardDesc:      { fontSize: '12px', color: '#888', margin: '6px 0 0', lineHeight: '1.5' },
@@ -186,4 +218,5 @@ const styles = {
   assignees:     { display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' },
   assigneeChip:  { width: '24px', height: '24px', borderRadius: '50%', background: 'linear-gradient(135deg, #4fffb0, #00c8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', color: '#080c10' },
   avatarImg:         { width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
+  statusIconContainer: {position: 'absolute',bottom: '10px',right: '12px',width: '18px',height: '18px',borderRadius: '50%',display: 'flex',alignItems: 'center',justifyContent: 'center',fontSize: '12px',fontWeight: 'bold',border: '1px solid',background: 'rgba(0,0,0,0.3)'}
 };

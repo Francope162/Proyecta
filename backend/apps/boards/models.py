@@ -33,11 +33,17 @@ class Task(models.Model):
         MEDIUM = 'medium', 'Medium'
         HIGH   = 'high',   'High'
 
+    class Status(models.TextChoices):
+        INCOMPLETE = 'Incomplete', 'incomplete'
+        IN_PROGRESS = 'In progress', 'in progress'
+        COMPLETE = 'Complete', 'complete'
+
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     column      = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='tasks')
     title       = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     priority    = models.CharField(max_length=10, choices=Priority.choices, default=Priority.MEDIUM)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.INCOMPLETE)
     due_date    = models.DateField(null=True, blank=True)
     order       = models.PositiveIntegerField(default=0)
     created_by  = models.ForeignKey(
