@@ -30,16 +30,16 @@ const UserSearch = ({ workspaceId, onUserAdded }) => {
   return (
     <div className="invite-container">
       <h3>Invitar Miembro</h3>
-      <form onSubmit={handleInvite} style={{ display: 'flex', gap: '10px' }}>
+      <form onSubmit={handleInvite} style={s.inviteForm}>
         <input
+          style={s.input}
           type="email"
           placeholder="nombre@ejemplo.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ padding: '8px', flex: 1 }}
         />
-        <button type="submit" disabled={loading}>
+        <button style={s.btnPrimary} type="submit" disabled={loading}>
           {loading ? 'Invitando...' : 'Invitar'}
         </button>
       </form>
@@ -50,3 +50,9 @@ const UserSearch = ({ workspaceId, onUserAdded }) => {
 };
 
 export default UserSearch;
+
+const s = {
+  inviteForm:     { display: 'flex', gap: '10px', background: '#0d1117', border: '1px solid #1e2730', borderRadius: '6px', padding: '1rem' },
+  input:          { flex: 1, background: '#080c10', border: '1px solid #1e2730', borderRadius: '4px', color: '#e8edf2', padding: '0.55rem 0.9rem', fontSize: '0.82rem', fontFamily: "'DM Mono', monospace", outline: 'none' },
+  btnPrimary:     { background: '#4fffb0', color: '#080c10', border: 'none', padding: '0.55rem 1.4rem', borderRadius: '3px', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', whiteSpace: 'nowrap' },
+}

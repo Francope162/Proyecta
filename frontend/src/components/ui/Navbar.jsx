@@ -5,6 +5,8 @@ export default function Navbar() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
+  const avatarSrc = user?.avatar_url;
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -30,7 +32,13 @@ export default function Navbar() {
             <div className="navbar__sep" />
 
             <div className="navbar__user" tabIndex={0}>
-              <div className="navbar__avatar">{initials}</div>
+              <div className="navbar__avatar">
+                {avatarSrc ? (
+                  <img style={s.avatarImg} src={avatarSrc} alt={user.username} />
+                ) : (
+                  <div>{initials}</div>
+                )}
+              </div>
               <span className="navbar__username">{user.username}</span>
               <span className="navbar__chevron">▾</span>
 
@@ -58,4 +66,8 @@ export default function Navbar() {
       </div>
     </nav>
   );
+}
+
+const s = {
+  avatarImg:         { width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
 }

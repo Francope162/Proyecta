@@ -75,17 +75,6 @@ export default function WorkspacePage() {
         <div style={s.membersBar}>
           <div style={s.membersLeft}>
             <span style={s.membersLabel}>// Miembros</span>
-            <div style={s.avatarRow}>
-              {members.map((m, i) => (
-                <div
-                  key={m.user?.id || i}
-                  style={{ ...s.avatar, marginLeft: i > 0 ? '-8px' : 0, zIndex: members.length - i }}
-                  title={m.user?.username}
-                >
-                  {(m.user?.username || '?').slice(0, 2).toUpperCase()}
-                </div>
-              ))}
-            </div>
             <span style={s.membersCount}>
               {members.length} miembro{members.length !== 1 ? 's' : ''}
             </span>
@@ -100,7 +89,7 @@ export default function WorkspacePage() {
             {members.map((m) => (
               <div key={m.user?.id} style={s.memberChip}>
                 <div style={s.chipAvatar}>
-                  {(m.user?.username || '?').slice(0, 2).toUpperCase()}
+                  {m.user?.avatar_url ? (<img style={s.avatarImg} src={m.user?.avatar_url} alt={m.user?.username} />):((m.user?.username || '?').slice(0, 2).toUpperCase())}
                 </div>
                 <div>
                   <div style={s.chipName}>{m.user?.username}</div>
@@ -213,6 +202,7 @@ const s = {
   chipAvatar:     { width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(79,255,176,0.3), rgba(0,200,255,0.3))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.58rem', fontWeight: 700, color: '#4fffb0' },
   chipName:       { fontSize: '0.72rem', color: '#e8edf2', letterSpacing: '0.02em' },
   chipRole:       { fontSize: '0.62rem', color: '#5a6a7a', letterSpacing: '0.06em', textTransform: 'uppercase' },
+  avatarImg:         { width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
 
   divider:        { marginBottom: '1.5rem', paddingBottom: '0.8rem', borderBottom: '1px solid #1e2730' },
 

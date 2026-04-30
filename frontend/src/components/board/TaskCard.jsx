@@ -111,7 +111,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                 ))}
               </select>
               <input
-                style={styles.taskInput}
+                style={styles.editInput}
                 type="date"
                 value={form.due_date}
                 onChange={(e) => setForm({ ...form, due_date: e.target.value })}
@@ -154,7 +154,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                 <div style={styles.assignees}>
                   {task.assignees.map(a => (
                     <div key={a.user.id} style={styles.assigneeChip}>
-                      {a.user.username.slice(0, 2).toUpperCase()}
+                      {a.user.avatar_url ? (<img style={styles.avatarImg} src={a.user.avatar_url} alt={a.user.username} />):((a.user.username || '?').slice(0, 2).toUpperCase())}
                     </div>
                   ))}
                 </div>
@@ -176,13 +176,14 @@ const styles = {
   cardActions:   { display: 'flex', gap: '4px', opacity: 0.4, transition: 'opacity 0.15s' },
   actionBtn:     { background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', padding: '2px 4px', color: '#333' },
   priorityBadge: { fontSize: '11px', fontWeight: '500', padding: '2px 8px', borderRadius: '20px' },
-  dueDate:       { fontSize: '11px', color: '#999' },
+  dueDate:       { fontSize: '11px', color: '#ddd', background: '#080c10' },
   editForm:      { display: 'flex', flexDirection: 'column', gap: '8px' },
-  editInput:     { padding: '7px 10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px', width: '100%', boxSizing: 'border-box' },
+  editInput:     { padding: '7px 10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px', width: '100%', boxSizing: 'border-box', background: '#080c10', color: '#ddd',  fontFamily: "'DM Mono', monospace", },
   editButtons:   { display: 'flex', gap: '8px' },
-  saveBtn:       { flex: 1, padding: '7px', borderRadius: '8px', background: '#1a1a1a', color: '#fff', fontSize: '13px', cursor: 'pointer', border: 'none' },
-  cancelBtn:     { flex: 1, padding: '7px', borderRadius: '8px', background: '#fff', color: '#666', fontSize: '13px', cursor: 'pointer', border: '1px solid #ddd' },
-  assignLabel:   { fontSize: '11px', color: '#888', marginTop: '4px' },
+  saveBtn:       { flex: 1, padding: '7px', borderRadius: '8px', background: '#4fffb0', color: '#080c10', fontSize: '13px', cursor: 'pointer', border: 'none', fontFamily: "'Syne', sans-serif", fontWeight: '700', letterSpacing: '0.04em' },
+  cancelBtn:     { flex: 1, padding: '7px', borderRadius: '8px', background: '#0d1117', color: '#ddd', fontSize: '13px', cursor: 'pointer', border: '1px solid #ddd', fontFamily: "'Syne', sans-serif", fontWeight: '700', letterSpacing: '0.04em' },
+  assignLabel:   { fontSize: '11px', color: '#ddd', marginTop: '4px' },
   assignees:     { display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' },
   assigneeChip:  { width: '24px', height: '24px', borderRadius: '50%', background: 'linear-gradient(135deg, #4fffb0, #00c8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', color: '#080c10' },
+  avatarImg:         { width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
 };

@@ -94,14 +94,14 @@ export default function RegisterPage() {
 }
 
 const styles = {
-  page:     { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#f5f5f5' },
-  card:     { background: '#fff', padding: '2rem', borderRadius: '12px', width: '100%', maxWidth: '400px', border: '1px solid #e0e0e0' },
-  title:    { fontSize: '22px', fontWeight: '500', marginBottom: '1.5rem' },
-  form:     { display: 'flex', flexDirection: 'column', gap: '10px' },
-  label:    { fontSize: '13px', color: '#666' },
-  input:    { padding: '10px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' },
-  button:   { marginTop: '8px', padding: '10px', borderRadius: '8px', background: '#1a1a1a', color: '#fff', fontSize: '14px', cursor: 'pointer', border: 'none' },
-  errorBox: { color: '#c0392b', fontSize: '13px', background: '#fdf0ed', padding: '10px', borderRadius: '8px', marginBottom: '1rem' },
-  footer:   { marginTop: '1.5rem', fontSize: '13px', textAlign: 'center', color: '#666' },
-  link:     { color: '#1a1a1a', fontWeight: '500' },
+  page:   { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#080c10' },
+  card:   { background: '#080c10', padding: '2rem', borderRadius: '12px', width: '100%', maxWidth: '400px', border: '1px solid #1e2730', color: '#4fffb0', fontFamily: "'Syne', sans-serif" },
+  title:  { fontSize: '22px', fontWeight: '500', marginBottom: '1.5rem' },
+  form:   { display: 'flex', flexDirection: 'column', gap: '10px' },
+  label:  { fontSize: '13px', color: '#888', fontFamily: "'DM Mono', monospace", },
+  input:  { padding: '10px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', background: '#080c10', color: '#ddd',  fontFamily: "'DM Mono', monospace", },
+  button: { marginTop: '8px', padding: '10px', borderRadius: '8px', background: '#4fffb0', color: '#fff', fontSize: '14px', cursor: 'pointer',fontFamily: "'Syne', sans-serif", fontWeight: '700', letterSpacing: '0.04em', border: '1px solid #1e2730'  },
+  error:  { color: '#c0392b', fontSize: '13px', background: '#fdf0ed', padding: '10px', borderRadius: '8px' },
+  footer: { marginTop: '1.5rem', fontSize: '13px', textAlign: 'center', color: '#666' },
+  link:   { color: '#4fffb0', fontWeight: '500' },
 };

@@ -6,6 +6,8 @@ export const getBoard     = (id)   => api.get(`/boards/${id}/`);
 
 export const createColumn = (data) => api.post('/columns/', data);
 export const reorderColumn = (id, order) => api.patch(`/columns/${id}/reorder/`, { order });
+export const deleteColumn = (id) => api.delete(`/columns/${id}/`);
+export const updateColumn = (id,data) => api.patch(`/columns/${id}/`, data);
 
 export const createTask  = (data)       => api.post('/tasks/', data);
 export const updateTask  = (id, data)   => api.patch(`/tasks/${id}/`, data);
