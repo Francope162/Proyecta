@@ -50,32 +50,32 @@ export default function BoardPage() {
     }
     };
 
-    if (loading) return <p style={styles.loading}>Cargando tablero...</p>;
+    if (loading) return <p className='loading'>Cargando tablero...</p>;
     if (!board)  return null;
 
     return (
-    <div style={styles.page}>
-        <header style={styles.header}>
-        <button style={styles.back} onClick={() => navigate('/')}>← Volver</button>
-        <h1 style={styles.title}>{board.name}</h1>
+    <div className='board-page'>
+        <header className='board-header'>
+        <button className='board-back' onClick={() => navigate('/')}>← Volver</button>
+        <h1 className='board-title'>{board.name}</h1>
         </header>
 
         <DragDropContext onDragEnd={handleDragEnd}>
-        <div style={styles.columnsRow}>
+        <div className='board-columns-row'>
             {board.columns.map((col) => (
             <Column key={col.id} column={col} boardId={id} members={board.workspace_members || []} onRefresh={() => fetchBoard(id)} />
             ))}
 
             {/* Forms column */}
-            <div style={styles.newColBox}>
-            <form onSubmit={handleAddColumn} style={styles.newColForm}>
+            <div className='board-new-col-box'>
+            <form onSubmit={handleAddColumn} className='board-new-col-form'>
                 <input
-                style={styles.newColInput}
+                className='board-new-col-input'
                 placeholder="Nueva columna..."
                 value={newColName}
                 onChange={(e) => setNewColName(e.target.value)}
                 />
-                <button style={styles.newColBtn} type="submit" disabled={adding}>
+                <button className='board-new-col-btn' type="submit" disabled={adding}>
                 {adding ? '...' : '+ Agregar'}
                 </button>
             </form>
@@ -85,16 +85,3 @@ export default function BoardPage() {
     </div>
     );
 }
-
-const styles = {
-  page:       { minHeight: '100vh', background: 'rgba(8, 12, 16, 0.85)' },
-  header:     { display: 'flex', alignItems: 'center', gap: '16px', padding: '1rem 1.5rem', background: 'rgba(8, 12, 16, 0.85)', borderBottom: '1px solid #e0e0e0' },
-  back:       { fontSize: '13px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' },
-  title:      { fontSize: '18px', fontWeight: '500', margin: 0 },
-  columnsRow: { display: 'flex', gap: '14px', padding: '1.5rem', overflowX: 'auto', alignItems: 'flex-start', minHeight: 'calc(100vh - 65px)' },
-  newColBox:  { minWidth: '260px', background: '#0d1117', borderRadius: '12px', border: '1px solid #1e2730', padding: '1rem' },
-  newColForm: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  newColInput:{ padding: '8px 10px', borderRadius: '4px', border: '1px solid #1e2730', fontSize: '1rem', background: '#080c10', color: '#e8edf2', fontFamily: "'DM Mono', monospace", outline: 'none' },
-  newColBtn:  { flex: 1, padding: '7px', borderRadius: '3px', background: '#4fffb0', color: '#080c10', fontSize: '0.75rem', cursor: 'pointer', border: 'none', fontFamily: "'Syne', sans-serif", fontWeight: '700', letterSpacing: '0.04em' },
-  loading:    { padding: '2rem', textAlign: 'center', color: '#999' },
-};

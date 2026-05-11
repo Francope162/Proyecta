@@ -62,7 +62,7 @@ export default function Column({ column, boardId, members = [], onRefresh }) {
   };
 
   return (
-    <div style={styles.column}>
+    <div className='column'>
       {editing ?
         (
         <form onSubmit={handleSave} style={styles.editForm}>
@@ -84,8 +84,8 @@ export default function Column({ column, boardId, members = [], onRefresh }) {
         </form>
         ):
         (
-        <div style={styles.columnHeader}>
-          <span style={styles.columnName}>{column.name}</span>
+        <div className='column-header'>
+          <span className='column-name'>{column.name}</span>
           <span style={styles.taskCount}>{column.tasks.length}</span>
           <div style={styles.columnActions}>
             <button style={styles.actionBtn} onClick={() => setEditing(true)}>✎</button>
@@ -99,10 +99,10 @@ export default function Column({ column, boardId, members = [], onRefresh }) {
       <Droppable droppableId={String(column.id)}>
         {(provided, snapshot) => (
           <div
+            className='column-task-list'
             ref={provided.innerRef}
             {...provided.droppableProps}
             style={{
-              ...styles.taskList,
               background: snapshot.isDraggingOver ? '#0d1117' : 'transparent',
             }}
           >

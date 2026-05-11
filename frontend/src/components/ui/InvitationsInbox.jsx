@@ -38,11 +38,11 @@ export default function InvitationsInbox({ onActionSuccess }) {
   if (invites.length === 0) return null; // No mostramos nada si no hay pendientes
 
   return (
-    <div style={s.inboxContainer}>
+    <div className='inbox-container'>
       <h3 style={s.inboxTitle}>// Invitaciones Pendientes ({invites.length})</h3>
       <div style={s.list}>
         {invites.map(invite => (
-          <div key={invite.id} style={s.inviteCard}>
+          <div className='inbox-invite-card' key={invite.id}>
             <div>
               <p style={s.inviteText}>
                 <strong>{invite.invited_by_name}</strong> te invitó a 
@@ -50,7 +50,7 @@ export default function InvitationsInbox({ onActionSuccess }) {
               </p>
               <span style={s.roleTag}>{invite.role}</span>
             </div>
-            <div style={s.actions}>
+            <div className='inbox-actions'>
               <button onClick={() => handleAction(invite.id, 'accept')} style={s.btnAccept}>
                 Aceptar
               </button>

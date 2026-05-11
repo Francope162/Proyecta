@@ -34,7 +34,7 @@ export default function Navbar() {
             <div className="navbar__user" tabIndex={0}>
               <div className="navbar__avatar">
                 {avatarSrc ? (
-                  <img style={s.avatarImg} src={avatarSrc} alt={user.username} />
+                  <img className='navbar-avatar-img' src={avatarSrc} alt={user.username} />
                 ) : (
                   <div>{initials}</div>
                 )}
@@ -66,8 +66,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-}
-
-const s = {
-  avatarImg:         { width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
 }

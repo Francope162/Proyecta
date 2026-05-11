@@ -67,11 +67,11 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
     <Draggable draggableId={String(task.id)} index={index}>
       {(provided, snapshot) => (
         <div
+          className='task-card'
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={{
-            ...styles.card,
             boxShadow: snapshot.isDragging ? '0 4px 12px rgba(0,0,0,0.12)' : 'none',
             ...provided.draggableProps.style, borderColor: hoverTask ? '#4fffb0' : '#1e2730', color:       hoverTask ? '#4fffb0' : '#5a6a7a',
           }}
@@ -145,8 +145,8 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
             </form>
           ) : (
             <>
-              <div style={styles.cardHeader}>
-                <p style={styles.cardTitle}>{task.title}</p>
+              <div className='task-card-header'>
+                <p className='task-card-title'>{task.title}</p>
                 <div style={styles.cardActions}>
                   <button style={styles.actionBtn} onClick={() => setEditing(true)}>✎</button>
                   <button style={{ ...styles.actionBtn, color: '#c0392b' }} onClick={handleDelete}>✕</button>
@@ -171,7 +171,7 @@ export default function TaskCard({ task, index, members = [], onRefresh }) {
                 </div>
               )}
 
-              <div style={styles.cardFooter}>
+              <div className='task-card-footer'>
                 <span style={{ ...styles.priorityBadge, background: priority.bg, color: priority.text }}>
                   {priority.label}
                 </span>

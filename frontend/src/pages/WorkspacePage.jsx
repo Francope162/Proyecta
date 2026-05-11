@@ -48,7 +48,7 @@ export default function WorkspacePage() {
   const members = workspace.members || [];
 
   return (
-    <div style={s.page}>
+    <div className='workspace-page'>
       <div style={s.gridBg} />
 
       <div style={s.container}>
@@ -72,8 +72,8 @@ export default function WorkspacePage() {
         </div>
 
         {/* Barra de miembros */}
-        <div style={s.membersBar}>
-          <div style={s.membersLeft}>
+        <div className='workspace-members-bar'>
+          <div className='workspace-member-left'>
             <span style={s.membersLabel}>// Miembros</span>
             <span style={s.membersCount}>
               {members.length} miembro{members.length !== 1 ? 's' : ''}
@@ -87,7 +87,7 @@ export default function WorkspacePage() {
           
           <div style={s.membersRight}>
             {members.map((m) => (
-              <div key={m.user?.id} style={s.memberChip}>
+              <div className='workspace-member-chip' key={m.user?.id}>
                 <div style={s.chipAvatar}>
                   {m.user?.avatar_url ? (<img style={s.avatarImg} src={m.user?.avatar_url} alt={m.user?.username} />):((m.user?.username || '?').slice(0, 2).toUpperCase())}
                 </div>
@@ -101,7 +101,7 @@ export default function WorkspacePage() {
         </div>
 
         {/*Add member */}
-        <div style={s.membersBar}>
+        <div className='workspace-members-bar'>
             <UserSearch  workspaceId={id} 
       onUserAdded={loadData}/>
         </div>
@@ -136,7 +136,7 @@ export default function WorkspacePage() {
             <p style={s.emptyDesc}>Creá el primer tablero para este workspace.</p>
           </div>
         ) : (
-          <div style={s.boardsGrid}>
+          <div className='workspace-boards-grid'>
             {boards.map((board) => (
               <div
                 key={board.id}

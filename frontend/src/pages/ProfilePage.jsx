@@ -73,37 +73,37 @@ export default function ProfilePage() {
   const initials  = profile.username.slice(0, 2).toUpperCase();
 
   return (
-    <div style={s.page}>
+    <div className='profile-page'>
       <div style={s.gridBg} />
 
-      <div style={s.container}>
+      <div className='profile-container' style={s.container}>
 
         {/* Breadcrumb */}
-        <div style={s.breadcrumb}>
-          <span style={s.breadcrumbLink} onClick={() => navigate('/')}>Dashboard</span>
+        <div className='profile-breadcrumb'>
+          <span className='profile-breadcrumb-link' onClick={() => navigate('/')}>Dashboard</span>
           <span style={s.breadcrumbSep}>/</span>
           <span style={s.breadcrumbCurrent}>@{profile.username}</span>
         </div>
 
         {/* Card principal */}
-        <div style={s.card}>
+        <div className='profile-card'>
 
           {/* Banner superior */}
-          <div style={s.banner}>
-            <div style={s.bannerGlow} />
+          <div className='profile-banner'>
+            <div className='profile-banner-glow'/>
             <div style={s.bannerTag}>// Perfil de usuario</div>
           </div>
 
           {/* Avatar + info */}
-          <div style={s.profileBody}>
-            <div style={s.avatarSection}>
+          <div className='profile-body'>
+            <div className='profile-avatar-section'>
 
               {/* Avatar */}
-              <div style={s.avatarWrap}>
+              <div className='profile-avatar-wrap'>
                 {avatarSrc ? (
-                  <img src={avatarSrc} alt={profile.username} style={s.avatarImg} />
+                  <img className='profile-avatar-img' src={avatarSrc} alt={profile.username}/>
                 ) : (
-                  <div style={s.avatarFallback}>{initials}</div>
+                  <div className='profile-avatar-fallback' style={s.avatarFallback}>{initials}</div>
                 )}
 
                 {/* Botón cambiar foto — solo si es el dueño y está editando */}
@@ -129,23 +129,23 @@ export default function ProfilePage() {
 
               {/* Username + email */}
               <div>
-                <h1 style={s.username}>@{profile.username}</h1>
-                {isOwner && <p style={s.email}>{profile.email}</p>}
-                <div style={s.badge}>
+                <h1 className='profile-username'>@{profile.username}</h1>
+                {isOwner && <p className='profile-email'>{profile.email}</p>}
+                <div className='profile-badge'>
                   {isOwner ? '// Tu perfil' : '// Miembro'}
                 </div>
               </div>
             </div>
 
             {/* Divider */}
-            <div style={s.divider} />
+            <div className='profile-divider' />
 
             {/* Bio */}
-            <div style={s.bioSection}>
+            <div className='profile-bio-section'>
               <div style={s.sectionTag}>// Biografía</div>
               {editing ? (
                 <textarea
-                  style={s.bioInput}
+                  className='profile-bio-input'
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Contá algo sobre vos..."
@@ -154,7 +154,7 @@ export default function ProfilePage() {
                   autoFocus
                 />
               ) : (
-                <p style={s.bioText}>
+                <p className='profile-bio-text'>
                   {profile.bio || (isOwner
                     ? 'Todavía no agregaste una biografía.'
                     : 'Este usuario no tiene biografía.'
@@ -171,7 +171,7 @@ export default function ProfilePage() {
 
             {/* Acciones — solo si es el dueño */}
             {isOwner && (
-              <div style={s.actions}>
+              <div className='profile-actions'>
                 {editing ? (
                   <>
                     <button style={s.btnPrimary} onClick={handleSave} disabled={saving}>
@@ -196,34 +196,14 @@ export default function ProfilePage() {
 }
 
 const s = {
-  page:              { minHeight: '100vh', background: '#080c10', paddingTop: '62px', fontFamily: "'DM Mono', monospace" },
   gridBg:            { position: 'fixed', inset: 0, backgroundImage: 'radial-gradient(#1e2730 1px, transparent 1px)', backgroundSize: '32px 32px', opacity: 0.4, pointerEvents: 'none' },
   loading:           { color: '#5a6a7a', fontSize: '0.82rem', textAlign: 'center', padding: '5rem', fontFamily: "'DM Mono', monospace" },
-  container:         { maxWidth: '680px', margin: '0 auto', padding: '2.5rem 2rem' },
-  breadcrumb:        { display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.75rem' },
-  breadcrumbLink:    { color: '#4fffb0', cursor: 'pointer', letterSpacing: '0.04em' },
   breadcrumbSep:     { color: '#1e2730' },
   breadcrumbCurrent: { color: '#5a6a7a' },
-  card:              { background: '#0d1117', border: '1px solid #1e2730', borderRadius: '8px', overflow: 'hidden' },
-  banner:            { height: '100px', background: 'linear-gradient(135deg, rgba(79,255,176,0.08), rgba(0,200,255,0.08))', borderBottom: '1px solid #1e2730', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '1rem 1.5rem' },
-  bannerGlow:        { position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(79,255,176,0.06), transparent 70%)', pointerEvents: 'none' },
   bannerTag:         { fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#4fffb0', position: 'relative' },
-  profileBody:       { padding: '1.5rem' },
-  avatarSection:     { display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem', marginTop: '-3rem' },
-  avatarWrap:        { position: 'relative', flexShrink: 0 },
-  avatarImg:         { width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #080c10', display: 'block' },
-  avatarFallback:    { width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #4fffb0, #00c8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.5rem', color: '#080c10', border: '3px solid #080c10' },
-  avatarOverlay:     { position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(8,12,16,0.7)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', gap: '2px' },
   avatarOverlayIcon: { fontSize: '1rem', color: '#4fffb0' },
   avatarOverlayText: { fontSize: '0.6rem', color: '#4fffb0', letterSpacing: '0.08em', textTransform: 'uppercase' },
-  username:          { fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.4rem', color: '#e8edf2', letterSpacing: '-0.02em', margin: '0 0 0.2rem' },
-  email:             { fontSize: '0.75rem', color: '#5a6a7a', margin: '0 0 0.5rem', letterSpacing: '0.02em' },
-  badge:             { display: 'inline-block', fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#4fffb0', background: 'rgba(79,255,176,0.08)', border: '1px solid rgba(79,255,176,0.2)', padding: '0.2rem 0.6rem', borderRadius: '2px' },
-  divider:           { height: '1px', background: '#1e2730', margin: '1.2rem 0' },
-  bioSection:        { marginBottom: '1.5rem' },
   sectionTag:        { fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#4fffb0', marginBottom: '0.8rem' },
-  bioText:           { fontSize: '0.82rem', color: '#5a6a7a', lineHeight: 1.8, margin: 0 },
-  bioInput:          { width: '100%', background: '#080c10', border: '1px solid #1e2730', borderRadius: '4px', color: '#e8edf2', padding: '0.8rem', fontSize: '0.82rem', fontFamily: "'DM Mono', monospace", outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.8 },
   charCount:         { fontSize: '0.68rem', color: '#5a6a7a', textAlign: 'right', marginTop: '0.4rem' },
   actions:           { display: 'flex', gap: '0.8rem' },
   btnPrimary:        { background: '#4fffb0', color: '#080c10', border: 'none', padding: '0.55rem 1.4rem', borderRadius: '3px', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer' },
